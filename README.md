@@ -2,5 +2,9 @@
 ### first day init  
 
 ### 资料
-- Bootstrap: https://v3.bootcss.com/css/
-- Springboot: https://spring.io/guides
+[Bootstrap文档](https://v3.bootcss.com/css/) 
+
+[Springboot 文档](https://spring.io/guides)
+
+[github Oauth 文档](https://developer.github.com/apps/)
+
