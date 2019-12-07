@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * UserMapper
  *
@@ -15,8 +17,9 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface UserMapper {
+
     @Select("select * from user")
-    User findAll();
+    List<User> findAll();
 
     @Insert("insert into user(name, account_id, token, gmt_create, gmt_modified) " +
             "values (#{name}, #{accountId}, #{token}, #{gmtCreate}, #{gmtModified})")
