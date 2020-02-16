@@ -68,6 +68,9 @@ public class PublishController {
         question.setCreator(user.getId());
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreate());
+        question.setCommentCount(0);
+        question.setViewCount(0);
+        question.setLikeCount(0);
 
         System.out.println(question);
         questionMapper.create(question);
