@@ -2,17 +2,17 @@ package com.ybs.community.controller;
 
 import com.ybs.community.dto.AccessTokenDTO;
 import com.ybs.community.dto.GitHubUser;
-import com.ybs.community.mapper.UserMapper;
 import com.ybs.community.model.User;
 import com.ybs.community.provider.GitHubProvider;
+import com.ybs.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import sun.nio.cs.US_ASCII;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -37,7 +37,7 @@ public class AuthorizeController {
     private String redirect_uri;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
@@ -58,10 +58,9 @@ public class AuthorizeController {
             user.setToken(token);
             user.setName(gitHubUser.getName());
             user.setAccountId(String.valueOf(gitHubUser.getId()));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(gitHubUser.getAvatarUrl());
-            userMapper.insert(user);
+            userService.createOrUpdate(user);
+//            userMapper.insert(user);
             response.addCookie(new Cookie("token", token));
             return "redirect:/";
         }else {
@@ -69,6 +68,17 @@ public class AuthorizeController {
             System.out.println("登录失败");
             return "redirect:/";
         }
+    }
+
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 
 
