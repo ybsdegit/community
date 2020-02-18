@@ -2,6 +2,8 @@ package com.ybs.community.service;
 
 import com.ybs.community.dto.PaginationDTO;
 import com.ybs.community.dto.QuestionDTO;
+import com.ybs.community.exception.CustomizeErrorCode;
+import com.ybs.community.exception.CustomizeException;
 import com.ybs.community.mapper.QuestionMapper;
 import com.ybs.community.mapper.UserMapper;
 import com.ybs.community.model.Question;
@@ -104,8 +106,11 @@ public class QuestionService {
     }
 
     public QuestionDTO getById(Integer id) {
-        QuestionDTO questionDTO = new QuestionDTO();
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOTE_FOUND);
+        }
+        QuestionDTO questionDTO = new QuestionDTO();
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         questionDTO.setUser(user);
         BeanUtils.copyProperties(question, questionDTO);
@@ -130,7 +135,10 @@ public class QuestionService {
             QuestionExample example = new QuestionExample();
             example.createCriteria()
                     .andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion, example);
+            int updated = questionMapper.updateByExampleSelective(updateQuestion, example);
+            if (updated != 1){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOTE_FOUND);
+            }
         }
     }
 }
