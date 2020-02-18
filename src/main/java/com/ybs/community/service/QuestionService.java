@@ -4,6 +4,7 @@ import com.ybs.community.dto.PaginationDTO;
 import com.ybs.community.dto.QuestionDTO;
 import com.ybs.community.exception.CustomizeErrorCode;
 import com.ybs.community.exception.CustomizeException;
+import com.ybs.community.mapper.QuestionExtMapper;
 import com.ybs.community.mapper.QuestionMapper;
 import com.ybs.community.mapper.UserMapper;
 import com.ybs.community.model.Question;
@@ -32,6 +33,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
@@ -140,5 +144,12 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOTE_FOUND);
             }
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
