@@ -9,4 +9,5 @@ package com.ybs.community.exception;
 
 public interface ICustomizeErrorCode {
     String  getMessage();
+    Integer getCode();
 }
